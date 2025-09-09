@@ -22,27 +22,28 @@ fn to_pig_latin_word(word: &str) -> String {
     if let Some(base) = first.nfd().next() {
         if !base.is_alphabetic() {
             return word.to_string();
-        } else {
-            return word.to_string();
         }
+    } else {
+        return word.to_string();
+    }
 
-        if is_vowel(first) {
-            return format!("{}-hay", word);
-        }
+    if is_vowel(first) {
+        return format!("{}-hay", word);
+    }
 
-        let rest = if graphemes.len() > 1 {
-            graphemes[1..].concat()
-        } else {
-            String::new()
-        };
+    let rest = if graphemes.len() > 1 {
+        graphemes[1..].concat()
+    } else {
+        String::new()
+    };
 
-        if rest.is_empty() {
-            format!("{}-ay", first)
-        } else {
-            format!("{}-{}ay", rest, first)
-        }
+    if rest.is_empty() {
+        format!("{}-ay", first)
+    } else {
+        format!("{}-{}ay", rest, first)
     }
 }
+
 
 fn to_pig_latin_text(text: &str) -> String {
     text
@@ -52,7 +53,19 @@ fn to_pig_latin_text(text: &str) -> String {
     .join(" ")
 }
 
-
 fn main() {
-    println!("Hello, world!");
+    let examples = [
+        "first",
+        "apple",
+        "Štěpán",
+        "Árbol",
+        "b",
+        "Привіт",
+        "élan",
+        "mix Ё and ü",
+    ];
+
+    for s in &examples {
+        println!("{} -> {}", s, to_pig_latin_text(s));
+    }
 }
