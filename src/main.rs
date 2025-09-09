@@ -44,6 +44,14 @@ fn to_pig_latin_word(word: &str) -> String {
     }
 }
 
+fn to_pig_latin_text(text: &str) -> String {
+    text
+    .split_whitespace()
+    .map(to_pig_latin_word)
+    .collect::<Vec<_>>()
+    .join(" ")
+}
+
 
 fn main() {
     println!("Hello, world!");
