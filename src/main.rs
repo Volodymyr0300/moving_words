@@ -11,6 +11,17 @@ fn is_vowel(grapheme:&str) -> bool {
     }
 }
 
+fn to_pig_latin_word(word: &str) -> String {
+    let graphemes: Vec<&str> = UnicodeSegmentation::graphemes(word, true).collect();
+    if graphemes.is_empty() {
+        return String::new();
+    }
+
+    let first = graphemes[0];
+
+    
+}
+
 fn main() {
     println!("Hello, world!");
 }
