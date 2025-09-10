@@ -1,71 +1,62 @@
-use unicode_segmentation::UnicodeSegmentation;
-use unicode_normalization::UnicodeNormalization;
-
-
-fn is_vowel(grapheme:&str) -> bool {
-    if let Some(base) = grapheme.nfd().next() {
-        let base_level = base.to_lowercase().next().unwrap_or(base);
-        matches!(base_level, 'a' | 'e' | 'i' | 'o' | 'u')
-    } else {
-        false
+fn is_vowel(c: char) -> bool {
+    match c {
+        'a' | 'e' | 'i' | 'o' | 'u' |
+        'A' | 'E' | 'I' | 'O' | 'U' => true,
+        _ => false,
     }
 }
 
 fn to_pig_latin_word(word: &str) -> String {
-    let graphemes: Vec<&str> = UnicodeSegmentation::graphemes(word, true).collect();
-    if graphemes.is_empty() {
+    let chars: Vec<char> = word.chars().collect();
+
+    if chars.is_empty() {
         return String::new();
     }
 
-    let first = graphemes[0];
-
-    if let Some(base) = first.nfd().next() {
-        if !base.is_alphabetic() {
-            return word.to_string();
-        }
-    } else {
-        return word.to_string();
-    }
+    let first = chars[0];
 
     if is_vowel(first) {
-        return format!("{}-hay", word);
-    }
-
-    let rest = if graphemes.len() > 1 {
-        graphemes[1..].concat()
+        let mut result = String::from(word);
+        result.push_str("-hay");
+        return result;
     } else {
-        String::new()
-    };
+        let mut result = String::new();
 
-    if rest.is_empty() {
-        format!("{}-ay", first)
-    } else {
-        format!("{}-{}ay", rest, first)
+        for i in 1..chars.len() {
+            result.push(chars[i]);
+        }
+
+        result.push('-');
+        result.push(first);
+        result.push_str("ay");
+
+        return result;
+
     }
 }
 
-
 fn to_pig_latin_text(text: &str) -> String {
-    text
-    .split_whitespace()
-    .map(to_pig_latin_word)
-    .collect::<Vec<_>>()
-    .join(" ")
+    let words: Vec<&str> = text.split_whitespace().collect();
+
+    let mut results : Vec<String> = Vec::new();
+
+    for word in words {
+        results.push(to_pig_latin_word(word));
+    }
+
+    results.join(" ")
 }
 
 fn main() {
     let examples = [
         "first",
         "apple",
-        "Štěpán",
-        "Árbol",
-        "b",
-        "Привіт",
-        "élan",
-        "mix Ё and ü",
+        "banana split",
+        "rust language",
+        "",
     ];
 
-    for s in &examples {
-        println!("{} -> {}", s, to_pig_latin_text(s));
+    for example in examples.iter() {
+        println!("{} -> {}", example, to_pig_latin_text(example));
     }
 }
